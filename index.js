@@ -2,6 +2,7 @@ import fs from 'fs';
 import fetch from 'node-fetch';
 import ora from 'ora';
 import prompt from 'prompt-sync';
+import cfonts from "cfonts";
 
 const configFile = 'config.json';
 const messagesFile = 'NTE-pesan.txt';
@@ -31,6 +32,18 @@ if (accounts.length === 0) {
 }
 
 // Prompt user for loop count and interval
+cfonts.say("NT Exhaust", {
+  font: "block",
+  align: "center",
+  colors: ["cyan", "magenta"],
+  background: "black",
+  letterSpacing: 1,
+  lineHeight: 1,
+  space: true,
+  maxLength: "0",
+});
+
+console.log("=== Telegram Channel🚀 : NT Exhaust (@NTExhaust) ===", "\x1b[36m");
 const loopCount = parseInt(promptSync('🔄 How many times should each account run? '), 10);
 const intervalHours = parseFloat(promptSync('⏳ Interval between each run (in hours)? '));
 
