@@ -133,20 +133,20 @@ async function makeRequests(account, runNumber) {
 }
 
 (async function runLoop() {
-  for (const account of accounts) {
-    console.log(`\n🚀 Running all loops for account with token: ${account.token}\n`);
-    
-    for (let i = 1; i <= loopCount; i++) {
-      await makeRequests(account, i);
-      await new Promise(resolve => setTimeout(resolve, 15000));
+  while (true) { // Infinite loop
+    for (const account of accounts) {
+      console.log(`\n🚀 Running all loops for account with token: ${account.token}\n`);
+      
+      for (let i = 1; i <= loopCount; i++) {
+        await makeRequests(account, i);
+        await new Promise(resolve => setTimeout(resolve, 15000));
+      }
+
+      console.log(`⏳ Waiting 10 seconds before switching to the next account...\n`);
+      await new Promise(resolve => setTimeout(resolve, 10000));
     }
 
-    console.log(`⏳ Waiting 10 seconds before switching to the next account...\n`);
-    await new Promise(resolve => setTimeout(resolve, 10000));
+    console.log(`⏳ Waiting ${intervalHours} hours before starting the next full cycle...\n`);
+    await new Promise(resolve => setTimeout(resolve, intervalHours * 3600 * 1000));
   }
-
-  console.log(`⏳ Waiting ${intervalHours} hours before starting the next full cycle...\n`);
-  await new Promise(resolve => setTimeout(resolve, intervalHours * 3600 * 1000));
-
-  console.log("\n✅ All accounts have completed their loops! Exiting program.");
 })();
