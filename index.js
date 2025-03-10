@@ -144,7 +144,7 @@ cfonts.say("NT Exhaust", {
   maxLength: "0",
 });
 console.log(centerText("=== Telegram Channel 🚀 : NT Exhaust (@NTExhaust) ==="));
-console.log(centerText("⌞👤 Mod : @Masputra & @chelvinsanjaya ⌝ \n"));
+console.log(centerText("⌞👤 Mod : @NT_Exhaust & @chelvinsanjaya ⌝ \n"));
 const loopCount = parseInt(promptSync("📝 Berapa kali setiap akun melakukan chat dengan AI ? "), 10);
 
 async function signAndVerify(privateKey) {
