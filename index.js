@@ -144,7 +144,7 @@ cfonts.say("NT Exhaust", {
   maxLength: "0",
 });
 console.log(centerText("=== Telegram Channel 🚀 : NT Exhaust (@NTExhaust) ==="));
-console.log(centerText("⌞👤 Mod : @NT_Exhaust & @chelvinsanjaya ⌝ \n"));
+console.log(centerText("⌞👤 Mod : @chelvinsanjaya ⌝ \n"));
 const loopCount = parseInt(promptSync("📝 Berapa kali setiap akun melakukan chat dengan AI ? "), 10);
 
 async function signAndVerify(privateKey) {
@@ -346,40 +346,44 @@ async function makeRequests(sessionToken, runNumber) {
 }
 
 async function runLoop() {
-  for (let i = 0; i < PRIVATE_KEYS.length; i++) {
-    console.log(chalk.bold.cyanBright(`\n=====================================================================`));
-    const verifyResult = await signAndVerify(PRIVATE_KEYS[i]);
-    if (!verifyResult) {
-      console.error(chalk.red("Gagal mendapatkan session token, lanjut ke akun berikutnya."));
-      continue;
-    }
-    const { sessionToken, wallet } = verifyResult;
-    console.log(chalk.bold.whiteBright(`🚀 Mulai run untuk akun: \x1b[32m${wallet.address}\x1b[0m`));
-    console.log(chalk.bold.cyanBright(`=====================================================================`));
+  while (true) {
+    for (let i = 0; i < PRIVATE_KEYS.length; i++) {
+      console.log(chalk.bold.cyanBright(`\n=====================================================================`));
+      const verifyResult = await signAndVerify(PRIVATE_KEYS[i]);
+      if (!verifyResult) {
+        console.error(chalk.red("Gagal mendapatkan session token, lanjut ke akun berikutnya."));
+        continue;
+      }
+      const { sessionToken, wallet } = verifyResult;
+      console.log(chalk.bold.whiteBright(`🚀 Mulai run untuk akun: \x1b[32m${wallet.address}\x1b[0m`));
+      console.log(chalk.bold.cyanBright(`=====================================================================`));
 
-    let successfulRuns = 0;
-    while (successfulRuns < loopCount) {
-      const result = await makeRequests(sessionToken, successfulRuns + 1);
-      if (result.dailyLimitReached) break;
-      if (result.failed) {
-        console.warn(chalk.yellow(`⚠️ Chat request gagal.. `));
+      let successfulRuns = 0;
+      while (successfulRuns < loopCount) {
+        const result = await makeRequests(sessionToken, successfulRuns + 1);
+        if (result.dailyLimitReached) break;
+        if (result.failed) {
+          console.warn(chalk.yellow(`⚠️ Chat request gagal.. `));
+          successfulRuns++;
+          if (successfulRuns < loopCount) {
+            await taskDelay(5000, 10000);
+          }
+          continue;
+        }
+
         successfulRuns++;
         if (successfulRuns < loopCount) {
           await taskDelay(5000, 10000);
         }
-        continue;
       }
-
-      successfulRuns++;
-      if (successfulRuns < loopCount) {
-        await taskDelay(5000, 10000);
+      if (i < PRIVATE_KEYS.length - 1) {
+        await akunDelay(3000, 5000);
       }
     }
-    if (i < PRIVATE_KEYS.length - 1) {
-      await akunDelay(3000, 5000);
-    }
+    console.log(chalk.bold.greenBright("\n✅ Semua pekerjaan telah selesai.."));
+    console.log(chalk.bold.yellowBright("⏳ Menunggu 24 jam sebelum memulai ulang..."));
+    await akunDelay(86400000, 86400000); // Tunggu 24 jam
   }
-  console.log(chalk.bold.greenBright("\n✅ Semua pekerjaan telah selesai.."));
 }
 
 runLoop();
